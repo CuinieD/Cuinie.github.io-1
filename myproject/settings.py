@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ydva)82vaxoelp&))$-)4ky&=l+g0z!1p_f9a*0p_@g5yu3@=&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'Cuinie.github.io']
 
 
 # Application definition
@@ -57,8 +57,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'accounts/templates'),
+            os.path.join(BASE_DIR, 'templates'),  # Add this line
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -137,3 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Set the base URL for GitHub Pages
+BASE_URL = '/'  # For local development
+# BASE_URL = '/your-repo-name/'  # For GitHub Pages

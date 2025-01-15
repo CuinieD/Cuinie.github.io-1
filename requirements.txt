@@ -1,1 +1,3 @@
-Django
+Django>=3.2,<4.0
+whitenoise  # For serving static files
+gunicorn    # For production server
