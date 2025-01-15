@@ -1,0 +1,136 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block admin_content %}
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Edit Incident</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Incident Number</label>
+                            <input type="text" class="form-control" value="{{ incident.incident_number }}" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Reporter Name *</label>
+                            <input type="text" class="form-control" name="reporter_name" value="{{ incident.reporter_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" name="department" value="{{ incident.department }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Position</label>
+                            <input type="text" class="form-control" name="position" value="{{ incident.position }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Incident Type *</label>
+                            <select class="form-select" name="incident_type" required>
+                                <option value="">Select incident type</option>
+                                {% for type in incident_types %}
+                                    <option value="{{ type.id }}" {% if type.id == incident.incident_type.id %}selected{% endif %}>
+                                        {{ type.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Status *</label>
+                            <select class="form-select" name="status" required>
+                                {% for status_value, status_label in status_choices %}
+                                    <option value="{{ status_value }}" {% if incident.status == status_value %}selected{% endif %}>
+                                        {{ status_label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Discovery Date *</label>
+                            <input type="datetime-local" class="form-control" name="discovery_date" 
+                                value="{{ incident.discovery_date|date:'Y-m-d\TH:i' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Incident Date *</label>
+                            <input type="datetime-local" class="form-control" name="incident_date" 
+                                value="{{ incident.incident_date|date:'Y-m-d\TH:i' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Containment Date</label>
+                            <input type="datetime-local" class="form-control" name="containment_date" 
+                                value="{{ incident.containment_date|date:'Y-m-d\TH:i' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Systems Affected Count</label>
+                            <input type="number" class="form-control" name="systems_affected_count" 
+                                value="{{ incident.systems_affected_count }}" min="0">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Data Subjects Count</label>
+                            <input type="number" class="form-control" name="data_subjects_count" 
+                                value="{{ incident.data_subjects_count }}" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description *</label>
+                    <textarea class="form-control" name="description" rows="4" required>{{ incident.description }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Scope</label>
+                    <textarea class="form-control" name="scope" rows="4">{{ incident.scope }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Attachment</label>
+                    {% if incident.attachment %}
+                        <div class="mb-2">
+                            <p>Current file: {{ incident.attachment.name }}</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="delete_attachment" id="delete_attachment">
+                                <label class="form-check-label" for="delete_attachment">
+                                    Delete current attachment
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <input type="file" class="form-control" name="attachment">
+                    <small class="text-muted">Leave empty to keep current file</small>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="{% url 'incident_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

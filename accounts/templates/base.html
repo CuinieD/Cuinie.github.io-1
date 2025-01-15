@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#incidents">Incident List</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Dashboard Tab -->
+        <div class="tab-pane fade show active" id="dashboard">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h4>Total Incidents</h4>
+                    <h3 id="totalIncidents">0</h3>
+                </div>
+                <div class="stat-card">
+                    <h4>This Month</h4>
+                    <h3 id="thisMonth">0</h3>
+                </div>
+                <div class="stat-card">
+                    <h4>This Week</h4>
+                    <h3 id="thisWeek">0</h3>
+                </div>
+                <div class="stat-card">
+                    <h4>Today</h4>
+                    <h3 id="today">0</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Monthly Incidents</h5>
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Incident Types</h5>
+                            <canvas id="typesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Incident List Tab -->
+        <div class="tab-pane fade" id="incidents">
+            <div class="card">
+                <div class="card-body">
+                    <div class="search-bar">
+                        <input type="text" id="searchIncidents" class="form-control" placeholder="Search incidents...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table" id="incidentTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

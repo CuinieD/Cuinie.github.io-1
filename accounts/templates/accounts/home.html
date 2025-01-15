@@ -1,0 +1,14 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to Incident Reporting System</h1>
+        <p class="lead">Report and track incidents efficiently</p>
+        <hr class="my-4">
+        <p>Use this system to report any incidents or view incident statistics.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'report_incident' %}" role="button">Report Incident</a>
+    </div>
+</div>
+{% endblock %}

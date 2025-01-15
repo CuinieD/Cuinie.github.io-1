@@ -1,0 +1,211 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block admin_content %}
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Incident Details</h5>
+        </div>
+        <div class="card-body">
+            <!-- Basic Information -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-muted">Basic Information</h6>
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="35%">Incident Number:</th>
+                            <td>{{ incident.incident_number }}</td>
+                        </tr>
+                        <tr>
+                            <th>Reporter:</th>
+                            <td>{{ incident.reporter_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Department:</th>
+                            <td>{{ incident.department }}</td>
+                        </tr>
+                        <tr>
+                            <th>Position:</th>
+                            <td>{{ incident.position }}</td>
+                        </tr>
+                        <tr>
+                            <th>Type:</th>
+                            <td>{{ incident.incident_type.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td><span class="badge bg-{{ incident.status }}">{{ incident.get_status_display }}</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-muted">Timeline</h6>
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="35%">Date Submitted:</th>
+                            <td>{{ incident.date_submitted|date:"M d, Y, g:i a" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Discovery Date:</th>
+                            <td>{{ incident.discovery_date|date:"M d, Y, g:i a" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Incident Date:</th>
+                            <td>{{ incident.incident_date|date:"M d, Y, g:i a" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Containment Date:</th>
+                            <td>{{ incident.containment_date|date:"M d, Y, g:i a"|default:"Not contained yet" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Time to Discovery:</th>
+                            <td>{{ incident.elapsed_time_to_discovery }}</td>
+                        </tr>
+                        <tr>
+                            <th>Time to Restoration:</th>
+                            <td>{{ incident.elapsed_time_to_restoration|default:"Ongoing" }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Impact Assessment -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h6 class="text-muted">Impact Assessment</h6>
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="20%">Systems Affected:</th>
+                            <td>{{ incident.systems_affected_count }} systems</td>
+                        </tr>
+                        <tr>
+                            <th>Data Subjects:</th>
+                            <td>{{ incident.data_subjects_count }} individuals</td>
+                        </tr>
+                        <tr>
+                            <th>Data Subject Groups:</th>
+                            <td>{{ incident.data_subjects_groups|default:"Not specified" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Data Sensitivity:</th>
+                            <td>{{ incident.data_sensitivity|default:"Not specified" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Access Levels:</th>
+                            <td>{{ incident.access_levels|default:"Not specified" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Affected User Titles:</th>
+                            <td>{{ incident.affected_user_titles|default:"Not specified" }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Description and Timeline -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-muted">Description</h6>
+                    <p class="mb-4">{{ incident.description|linebreaks }}</p>
+                    
+                    <h6 class="text-muted">Scope</h6>
+                    <p>{{ incident.scope|linebreaks|default:"Not specified" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-muted">Detailed Timeline</h6>
+                    <p>{{ incident.detailed_timeline|linebreaks|default:"No detailed timeline provided" }}</p>
+                </div>
+            </div>
+
+            <!-- Attachments -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h6 class="text-muted">Attachments</h6>
+                    {% if incident.attachment %}
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <i class="fas fa-file me-2"></i>
+                                        <span>{{ incident.attachment.name|split:'/'}}</span>
+                                    </div>
+                                    <div>
+                                        <a href="{{ incident.attachment.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No attachments uploaded</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Actions Taken -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h6 class="text-muted">Actions Taken</h6>
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Actions Taken to Identify Affected Resources</h6>
+                            <p>{{ incident.actions_identify_resources|linebreaks|default:"Not specified" }}</p>
+                            
+                            <h6>Actions Taken to Address the Incident</h6>
+                            <p>{{ incident.actions_address_incident|linebreaks|default:"Not specified" }}</p>
+                            
+                            <h6>Actions Performed to Mitigate Possible Harm</h6>
+                            <p>{{ incident.actions_mitigate_harm|linebreaks|default:"Not specified" }}</p>
+                            
+                            <h6>Actions Taken to Prevent Similar Incidents</h6>
+                            <p>{{ incident.actions_prevent_similar|linebreaks|default:"Not specified" }}</p>
+                            
+                            <h6>Additional Actions Planned</h6>
+                            <p>{{ incident.additional_actions_planned|linebreaks|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DPO Evaluation -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h6 class="text-muted">DPO Evaluation</h6>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Status: 
+                                    <span class="badge bg-{{ incident.dpo_status }}">
+                                        {{ incident.get_dpo_status_display }}
+                                    </span>
+                                </h6>
+                                {% if incident.dpo_evaluation_date %}
+                                    <small class="text-muted">
+                                        Evaluated on: {{ incident.dpo_evaluation_date|date:"M d, Y, g:i a" }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                            
+                            <h6>DPO Remarks</h6>
+                            <p>{{ incident.dpo_remarks|linebreaks|default:"No remarks provided yet" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4">
+                <a href="{% url 'incident_edit' incident.id %}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'incident_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

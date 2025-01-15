@@ -1,0 +1,17 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Incident Reported Successfully!</h4>
+        <p>Your incident has been reported. Please keep this reference number for future correspondence:</p>
+        <h2 class="text-center">{{ incident_number }}</h2>
+        <hr>
+        <p class="mb-0">An administrator will review your report and take appropriate action.</p>
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'home' %}" class="btn btn-primary">Return to Home</a>
+        <a href="{% url 'report_incident' %}" class="btn btn-secondary">Report Another Incident</a>
+    </div>
+</div>
+{% endblock %}
