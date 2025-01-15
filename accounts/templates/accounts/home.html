@@ -8,15 +8,9 @@
         <h1 class="display-4 mb-4">Incident Management System</h1>
         <p class="lead mb-4">Transform your incident reporting workflow with insights.<br>
             Track, analyze, and resolve incidents with unprecedented efficiency.</p>
-        {% if user.is_authenticated %}
-            <a class="btn btn-light btn-lg" href="{% url 'report_incident' %}">
-                <i class="fas fa-plus-circle"></i> Report Incident
-            </a>
-        {% else %}
-            <a class="btn btn-light btn-lg" href="{% url 'login' %}">
-                <i class="fas fa-sign-in-alt"></i> Admin Login
-            </a>
-        {% endif %}
+        <a class="btn btn-light btn-lg" href="{% url 'report_incident' %}">
+            <i class="fas fa-plus-circle"></i> Report Incident
+        </a>
     </div>
 </div>
 

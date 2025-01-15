@@ -17,8 +17,67 @@ def home_view(request):
         return redirect('admin_dashboard')
     return render(request, 'accounts/home.html')
 
+def report_incident(request):
+    """Report incident view - no login required"""
+    if request.method == 'POST':
+        try:
+            incident_type = request.POST.get('incident_type')
+            other_type = request.POST.get('other_incident_type')
+            
+            # If "Others" is selected, create a new incident type
+            if incident_type == 'others' and other_type:
+                new_type = IncidentType.objects.create(
+                    name=other_type,
+                    description=f'User specified incident type: {other_type}'
+                )
+                incident_type_id = new_type.id
+            else:
+                incident_type_id = incident_type
+            
+            # Create new incident
+            incident = Incident(
+                reporter_name=request.POST.get('reporter_name'),
+                position=request.POST.get('position'),
+                department=request.POST.get('department'),
+                incident_type_id=incident_type_id,
+                description=request.POST.get('description'),
+                scope=request.POST.get('scope'),
+                systems_affected_count=request.POST.get('systems_affected_count', 0),
+                data_subjects_count=request.POST.get('data_subjects_count', 0),
+                data_subjects_groups=request.POST.get('data_subjects_groups'),
+                discovery_date=timezone.make_aware(datetime.strptime(request.POST.get('discovery_date'), '%Y-%m-%dT%H:%M')),
+                incident_date=timezone.make_aware(datetime.strptime(request.POST.get('incident_date'), '%Y-%m-%dT%H:%M')),
+                containment_date=timezone.make_aware(datetime.strptime(request.POST.get('containment_date'), '%Y-%m-%dT%H:%M')) if request.POST.get('containment_date') else None,
+                detailed_timeline=request.POST.get('detailed_timeline'),
+                data_sensitivity=request.POST.get('data_sensitivity'),
+                access_levels=request.POST.get('access_levels'),
+                affected_user_titles=request.POST.get('affected_user_titles'),
+                status='new'
+            )
+            incident.save()
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Incident report submitted successfully.'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            })
+    
+    context = {
+        'incident_types': IncidentType.objects.all().order_by('name'),
+        'incident_number': f'IR-{timezone.now().year}-{Incident.objects.count() + 1:04d}',
+        'current_year': timezone.now().year,
+    }
+    return render(request, 'accounts/report_incident.html', context)
+
 @login_required
 def admin_dashboard(request):
+    """Admin dashboard - requires login"""
+    if not request.user.is_staff:
+        return redirect('home')
     # Get your data
     incidents = Incident.objects.all().order_by('-date_submitted')
     
@@ -170,62 +229,6 @@ def incident_export(request):
         ])
     
     return response
-
-def report_incident(request):
-    if request.method == 'POST':
-        try:
-            incident_type = request.POST.get('incident_type')
-            other_type = request.POST.get('other_incident_type')
-            
-            # If "Others" is selected, create a new incident type
-            if incident_type == 'others' and other_type:
-                new_type = IncidentType.objects.create(
-                    name=other_type,
-                    description=f'User specified incident type: {other_type}'
-                )
-                incident_type_id = new_type.id
-            else:
-                incident_type_id = incident_type
-            
-            # Create new incident
-            incident = Incident(
-                reporter_name=request.POST.get('reporter_name'),
-                position=request.POST.get('position'),
-                department=request.POST.get('department'),
-                incident_type_id=incident_type_id,
-                description=request.POST.get('description'),
-                scope=request.POST.get('scope'),
-                systems_affected_count=request.POST.get('systems_affected_count', 0),
-                data_subjects_count=request.POST.get('data_subjects_count', 0),
-                data_subjects_groups=request.POST.get('data_subjects_groups'),
-                discovery_date=timezone.make_aware(datetime.strptime(request.POST.get('discovery_date'), '%Y-%m-%dT%H:%M')),
-                incident_date=timezone.make_aware(datetime.strptime(request.POST.get('incident_date'), '%Y-%m-%dT%H:%M')),
-                containment_date=timezone.make_aware(datetime.strptime(request.POST.get('containment_date'), '%Y-%m-%dT%H:%M')) if request.POST.get('containment_date') else None,
-                detailed_timeline=request.POST.get('detailed_timeline'),
-                data_sensitivity=request.POST.get('data_sensitivity'),
-                access_levels=request.POST.get('access_levels'),
-                affected_user_titles=request.POST.get('affected_user_titles'),
-                status='new'
-            )
-            incident.save()
-            
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Incident report submitted successfully.'
-            })
-        except Exception as e:
-            return JsonResponse({
-                'status': 'error',
-                'message': str(e)
-            })
-    
-    # For GET requests
-    context = {
-        'incident_types': IncidentType.objects.all().order_by('name'),
-        'incident_number': f'IR-{timezone.now().year}-{Incident.objects.count() + 1:04d}',
-        'current_year': timezone.now().year,
-    }
-    return render(request, 'accounts/report_incident.html', context)
 
 from django import template
 from django.core.serializers.json import DjangoJSONEncoder
