@@ -2,17 +2,49 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to Incident Reporting System</h1>
-        <p class="lead">Report and track incidents efficiently</p>
-        <hr class="my-4">
-        <p>Use this system to report any incidents or view incident statistics.</p>
+<div class="hero-section">
+    <div class="container">
+        <span class="incident-management-badge">Incident Management</span>
+        <h1 class="display-4 mb-4">Incident Management System</h1>
+        <p class="lead mb-4">Transform your incident reporting workflow with insights.<br>
+            Track, analyze, and resolve incidents with unprecedented efficiency.</p>
         {% if user.is_authenticated %}
-            <a class="btn btn-primary btn-lg" href="{% url 'report_incident' %}" role="button">Report Incident</a>
+            <a class="btn btn-light btn-lg" href="{% url 'report_incident' %}">
+                <i class="fas fa-plus-circle"></i> Report Incident
+            </a>
         {% else %}
-            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login to Report Incident</a>
+            <a class="btn btn-light btn-lg" href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt"></i> Admin Login
+            </a>
         {% endif %}
+    </div>
+</div>
+
+<div class="stats-section">
+    <div class="container">
+        <h2 class="text-center mb-5">Everything you need</h2>
+        <p class="text-center text-muted mb-5">Our comprehensive suite of tools helps you manage incidents effectively with modern solutions</p>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Clients</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

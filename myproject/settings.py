@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ydva)82vaxoelp&))$-)4ky&=l+g0z!1p_f9a*0p_@g5yu3@=&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'Cuinie.github.io']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'Cuinie.github.io', '0.0.0.0']
 
 
 # Application definition
@@ -122,8 +122,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'accounts/static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Add login redirect settings
 LOGIN_REDIRECT_URL = 'admin_dashboard'
