@@ -15,7 +15,7 @@ def home_view(request):
     """Home page view"""
     if request.user.is_authenticated and request.user.is_staff:
         return redirect('admin_dashboard')
-    return render(request, 'accounts/index.html')
+    return render(request, 'accounts/home.html')
 
 @login_required
 def admin_dashboard(request):
