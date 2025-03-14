@@ -1,0 +1,42 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to the Incident Reporting System</h1>
+        <p class="hero-subtitle">Efficiently report and track incidents with ease.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Quick Reporting</h3>
+                <p>Report incidents quickly and easily through our streamlined system</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Track Status</h3>
+                <p>Monitor the progress and status of your reported incidents in real-time</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-analytics"></i>
+                </div>
+                <h3>Detailed Analytics</h3>
+                <p>Access comprehensive statistics and insights about incident patterns</p>
+            </div>
+        </div>
+
+        <div class="cta-container">
+            <a href="{% url 'accounts:report_incident' %}" class="btn-cta">Get Started</a>
+            <a href="#learn-more" class="btn-secondary">Learn More</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

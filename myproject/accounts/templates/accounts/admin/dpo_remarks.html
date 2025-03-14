@@ -1,0 +1,73 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block admin_content %}
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">DPO Evaluation - Incident #{{ incident.incident_number }}</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Actions Taken Section -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">Actions Taken</h6>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Actions Taken to Identify Affected Resources</label>
+                        <textarea class="form-control" name="actions_identify_resources" rows="3">{{ incident.actions_identify_resources }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Actions Taken to Address the Incident</label>
+                        <textarea class="form-control" name="actions_address_incident" rows="3">{{ incident.actions_address_incident }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Actions Performed to Mitigate Possible Harm</label>
+                        <textarea class="form-control" name="actions_mitigate_harm" rows="3">{{ incident.actions_mitigate_harm }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Actions Taken to Prevent Similar Incidents</label>
+                        <textarea class="form-control" name="actions_prevent_similar" rows="3">{{ incident.actions_prevent_similar }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Details of Additional Actions Planned</label>
+                        <textarea class="form-control" name="additional_actions_planned" rows="3">{{ incident.additional_actions_planned }}</textarea>
+                    </div>
+                </div>
+
+                <!-- DPO Evaluation Section -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">DPO Evaluation</h6>
+                    
+                    <div class="form-group">
+                        <label for="dpo_status">Status</label>
+                        <select name="dpo_status" id="dpo_status" class="form-control" required>
+                            {% for value, label in dpo_status_choices %}
+                                <option value="{{ value }}" {% if incident.dpo_status == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dpo_remarks">DPO Remarks</label>
+                        <textarea name="dpo_remarks" id="dpo_remarks" class="form-control" rows="4">{{ incident.dpo_remarks }}</textarea>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Save DPO Evaluation</button>
+                    <a href="{% url 'incident_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

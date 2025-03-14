@@ -1,0 +1,2 @@
+Django
+reportlab==4.0.8
